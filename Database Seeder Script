@@ -1,0 +1,130 @@
+// scripts/seedDatabase.js - Database Seeder
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+require('dotenv').config();
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/first_city_iron');
+
+// Models (simplified for seeding)
+const User = mongoose.model('User', {
+  username: String,
+  email: String,
+  password: String,
+  role: String,
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Product = mongoose.model('Product', {
+  name: String,
+  nameEn: String,
+  description: String,
+  descriptionEn: String,
+  category: String,
+  specifications: Object,
+  images: [String],
+  price: Number,
+  inStock: Boolean,
+  featured: Boolean,
+  createdAt: { type: Date, default: Date.now }
+});
+
+const NewsUpdate = mongoose.model('NewsUpdate', {
+  title: String,
+  titleEn: String,
+  content: String,
+  contentEn: String,
+  author: String,
+  published: Boolean,
+  featured: Boolean,
+  tags: [String],
+  createdAt: { type: Date, default: Date.now }
+});
+
+async function seedDatabase() {
+  try {
+    console.log('🌱 Starting database seeding...');
+
+    // Clear existing data
+    await User.deleteMany({});
+    await Product.deleteMany({});
+    await NewsUpdate.deleteMany({});
+
+    // Create admin user
+    const hashedPassword = await bcrypt.hash('admin123456', 12);
+    const adminUser = new User({
+      username: 'admin',
+      email: 'admin@firstcityiron.com',
+      password: hashedPassword,
+      role: 'admin'
+    });
+    await adminUser.save();
+    console.log('✅ Admin user created');
+
+    // Seed products
+    const products = [
+      {
+        name: 'قضبان حديد التسليح الخرسانية',
+        nameEn: 'Concrete Reinforcement Steel Bars',
+        description: 'قضبان حديد التسليح الخرسانية عالية الجودة بأقطار مختلفة من 10 ملم إلى 32 ملم، مصممة لتلبية معايير البناء الدولية وتوفير أقصى قوة ومتانة للمباني والمنشآت.',
+        descriptionEn: 'High-quality concrete reinforcement steel bars with various diameters from 10mm to 32mm, designed to meet international construction standards and provide maximum strength and durability for buildings and structures.',
+        category: 'reinforcement',
+        specifications: {
+          diameter: '10-32 ملم',
+          length: '6-12 متر',
+          weight: 'حسب القطر',
+          standard: 'ASTM A615',
+          grade: 'Grade 60'
+        },
+        price: 750,
+        inStock: true,
+        featured: true
+      },
+      {
+        name: 'قضبان الحديد المبسط',
+        nameEn: 'Plain Steel Bars',
+        description: 'قضبان حديد مبسط عالية الجودة، مناسبة للاستخدامات الصناعية والإنشائية المختلفة بمواصفات دولية معتمدة وقوة تحمل عالية.',
+        descriptionEn: 'High-quality plain steel bars suitable for various industrial and construction applications with certified international specifications and high load-bearing capacity.',
+        category: 'plain',
+        specifications: {
+          diameter: '6-25 ملم',
+          length: '6-12 متر',
+          weight: 'حسب القطر',
+          standard: 'ASTM A36',
+          grade: 'Commercial Grade'
+        },
+        price: 680,
+        inStock: true,
+        featured: true
+      },
+      {
+        name: 'قضبان الحديد المربع',
+        nameEn: 'Square Steel Bars',
+        description: 'قضبان حديد بمقطع مربع، مصنعة بدقة عالية لتلبية احتياجات المشاريع الإنشائية والصناعية الخاصة، مع ضمان الجودة والمتانة.',
+        descriptionEn: 'Square cross-section steel bars, manufactured with high precision to meet the needs of special construction and industrial projects, with quality and durability guarantee.',
+        category: 'square',
+        specifications: {
+          diameter: '10-30 ملم',
+          length: '6-12 متر',
+          weight: 'حسب القطر',
+          standard: 'ASTM A36',
+          grade: 'Structural Grade'
+        },
+        price: 720,
+        inStock: true,
+        featured: false
+      }
+    ];
+
+    for (const productData of products) {
+      const product = new Product(productData);
+      await product.save();
+    }
+    console.log('✅ Products seeded');
+
+    // Seed news updates
+    const newsUpdates = [
+      {
+        title: 'افتتاح خط إنتاج جديد',
+        titleEn: 'New Production Line Opening',
+        content: 'تعلن شركة المدينة الأولى لصناعة الحديد عن افتتاح خط إنتاج جديد يهدف إلى زيادة الطاقة الإنتاجية
