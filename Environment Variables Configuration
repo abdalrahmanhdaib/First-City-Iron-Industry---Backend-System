@@ -1,0 +1,46 @@
+# .env file - Environment Variables Configuration
+
+# Server Configuration
+PORT=5000
+NODE_ENV=production
+
+# Database Configuration
+MONGODB_URI=mongodb://localhost:27017/first_city_iron
+# For production, use MongoDB Atlas:
+# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/first_city_iron
+
+# JWT Configuration
+JWT_SECRET=your_super_secret_jwt_key_here_change_this_in_production
+JWT_EXPIRES_IN=24h
+
+# Frontend Configuration
+FRONTEND_URL=http://localhost:3000
+# For production:
+# FRONTEND_URL=https://your-domain.com
+
+# Email Configuration (for notifications)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+
+# Admin Default Credentials
+DEFAULT_ADMIN_USERNAME=admin
+DEFAULT_ADMIN_EMAIL=admin@firstcityiron.com
+DEFAULT_ADMIN_PASSWORD=admin123456
+
+# File Upload Configuration
+MAX_FILE_SIZE=5242880
+UPLOAD_DIR=uploads
+
+# Security
+BCRYPT_ROUNDS=12
+RATE_LIMIT_WINDOW=900000
+RATE_LIMIT_MAX=100
+
+# Company Information
+COMPANY_NAME=شركة المدينة الأولى لصناعة الحديد
+COMPANY_NAME_EN=First City Iron Industry Company
+COMPANY_EMAIL=info@firstcityiron.com
+COMPANY_PHONE=+962-5-123-4567
+COMPANY_ADDRESS=الزرقاء، الأردن
